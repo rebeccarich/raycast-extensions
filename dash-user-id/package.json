@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "dash-user-id",
-  "title": "dash-user-id",
+  "title": "Dash User ID",
   "description": "Copy Dash user ID",
   "icon": "command-icon.png",
   "author": "rebeccarich1",
