@@ -2,9 +2,10 @@ import {
   Clipboard,
   environment,
   LaunchType,
-  Toast,
   updateCommandMetadata,
-  getPreferenceValues
+  getPreferenceValues,
+  closeMainWindow,
+  showHUD
 } from '@raycast/api'
 
 type Preferences = {
@@ -20,12 +21,8 @@ const command = async () => {
   await Clipboard.copy(userId)
 
   if (environment.launchType === LaunchType.UserInitiated) {
-    const toast = new Toast({
-      style: Toast.Style.Success,
-      title: 'Copied to clipboard',
-      message: userId
-    })
-    await toast.show()
+    closeMainWindow()
+    showHUD(`Copied ${userId} to Clipboard`)
   }
 }
 
