@@ -1,77 +1,72 @@
-import { Action, ActionPanel, Color, Form, getPreferenceValues, Icon, showToast, Toast } from "@raycast/api";
-import { execa } from "execa";
-import { rmSync } from "fs";
-import { readdirSync, statSync, copySync } from "fs-extra";
-import { tmpdir, userInfo } from "os";
-import { join } from "path";
-import { CleanOptions, simpleGit, SimpleGit } from "simple-git";
+import { Action, ActionPanel, Color, Form, getPreferenceValues, Icon, showToast, Toast } from '@raycast/api'
+import { readdirSync, statSync, copySync, rmSync } from 'fs-extra'
+import { tmpdir, userInfo } from 'os'
+import { join } from 'path'
+import { simpleGit, SimpleGit } from 'simple-git'
 
 type FormValues = {
-  Repo: string;
-};
+  Repo: string
+}
 
 type Preferences = {
-  repoPath: string;
-};
+  repoPath: string
+}
 
-const preferences: Preferences = getPreferenceValues();
+const preferences: Preferences = getPreferenceValues()
 
 export default function Command(props: { draftValues?: FormValues }) {
   function isGitDirectory(path: string) {
     try {
-      statSync(join(path, ".git"));
-      return true;
+      statSync(join(path, '.git'))
+      return true
     } catch (err) {
-      return false;
+      return false
     }
   }
 
   const gitDirectories = readdirSync(preferences.repoPath)
     .map((item) => join(preferences.repoPath, item))
-    .filter((item) => statSync(item) && isGitDirectory(item));
+    .filter((item) => statSync(item) && isGitDirectory(item))
 
   async function handleRepoChange(repo: string) {
-    console.log(repo);
+    console.log(repo)
 
     // execa("which", ["gpg-agent"]).then((res) => {
     //   console.log(res);
     // });
 
-    const temp = tmpdir();
-    console.log(temp);
-    console.log(userInfo());
-    const baseDir = `${temp}/gcp-deploy-repo-tmp`;
-    console.log(baseDir);
+    const temp = tmpdir()
+    console.log(temp)
+    console.log(userInfo())
+    const baseDir = `${temp}/gcp-deploy-repo-tmp`
+    console.log(baseDir)
     try {
-      rmSync(baseDir, { recursive: true });
-      copySync(repo, baseDir, { filter: (s: string) => !s.includes("node_modules") });
-      console.log("done!");
+      // rmSync(baseDir, { recursive: true })
+      copySync(repo, baseDir, { filter: (s: string) => !s.includes('node_modules') })
+      console.log('done!')
     } catch (err) {
-      console.error(err);
-      return;
+      console.error(err)
+      return
     }
 
-    require("child_process").spawn("git", ["pull"]);
+    const git: SimpleGit = simpleGit({
+      baseDir,
+      spawnOptions: {
+        uid: userInfo().uid,
+        gid: userInfo().gid
+      }
+    })
 
-    // const git: SimpleGit = simpleGit({
-    //   baseDir,
-    //   spawnOptions: {
-    //     uid: userInfo().uid,
-    //     gid: userInfo().gid,
-    //   },
-    // });
-    // //.env("GIT_SSH_COMMAND", "ssh -v");
-
-    // console.log(await git.listConfig());
-    // // console.log(await git.listRemote());
-    // await git.stash();
-    // await git.checkout("main");
-    // await git.fetch();
-    // console.log((await git.status()).isClean());
+    console.log(await git.listConfig())
+    // console.log(await git.listRemote());
+    await git.stash()
+    await git.checkout('main')
+    await git.fetch()
+    console.log((await git.status()).isClean())
   }
 
   async function handleSubmit(values: FormValues) {
-    console.log(values);
+    console.log(values)
     // await showToast({ style: Toast.Style.Animated, title: "Reporting bug" });
     // try {
     //   const response = await fetch(`https://api.airtable.com/v0/${preferences.baseId}/Bugs%20and%20issues`, {
@@ -138,5 +133,5 @@ export default function Command(props: { draftValues?: FormValues }) {
         ))}
       </Form.Dropdown>
     </Form>
-  );
+  )
 }

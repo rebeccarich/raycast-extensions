@@ -1,27 +1,32 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "gcp-login",
-  "title": "GCP Login",
-  "description": "Opens the GCP auth flow",
+  "name": "dash-user-id",
+  "title": "dash-user-id",
+  "description": "Copy Dash user ID",
   "icon": "command-icon.png",
   "author": "rebeccarich1",
   "owner": "rebeccarich",
-  "categories": [
-    "Productivity"
-  ],
   "license": "MIT",
   "commands": [
     {
-      "name": "gcp",
-      "title": "GCP Auth",
-      "description": "Opens the GCP auth flow",
+      "name": "index",
+      "title": "Copy Dash User ID",
+      "description": "Copy Dash User ID",
       "mode": "no-view"
     }
   ],
+  "preferences": [
+    {
+      "name": "userId",
+      "description": "Dash user ID",
+      "type": "textfield",
+      "required": true,
+      "title": "Dash user ID",
+      "placeholder": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
   "dependencies": {
-    "@raycast/api": "^1.57.1",
-    "@raycast/utils": "^1.9.1",
-    "execa": "^8.0.1"
+    "@raycast/api": "^1.57.2"
   },
   "devDependencies": {
     "@raycast/eslint-config": "1.0.5",
