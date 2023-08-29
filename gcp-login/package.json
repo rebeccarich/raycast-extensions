@@ -18,6 +18,17 @@
       "mode": "no-view"
     }
   ],
+  "preferences": [
+    {
+      "name": "pathToGcloud",
+      "description": "Path to gcloud executable",
+      "type": "file",
+      "required": true,
+      "title": "Path to gcloud executable",
+      "placeholder": "~/google-cloud-sdk/bin/gcloud",
+      "default": "~/google-cloud-sdk/bin/gcloud"
+    }
+  ],
   "dependencies": {
     "@raycast/api": "^1.57.1",
     "@raycast/utils": "^1.9.1",

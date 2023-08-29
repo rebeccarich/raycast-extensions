@@ -1,25 +1,16 @@
-import { environment, LaunchType, Toast, updateCommandMetadata } from '@raycast/api'
+import { environment, getPreferenceValues, LaunchType, Toast, updateCommandMetadata } from '@raycast/api'
 import { execa } from 'execa'
 
-const path = '~/google-cloud-sdk/bin/gcloud'
+type Preferences = {
+  pathToGcloud: string
+}
+
+const preferences: Preferences = getPreferenceValues()
 
 export default async function Command() {
   await updateCommandMetadata({ subtitle: 'Open auth flow in browser' })
-  console.log(process.execPath)
-  const { stdout } = await execa(`which git`, { shell: true })
-  console.log(stdout)
   try {
-    // await execa(path, ['auth', 'login', '--brief', '--quiet'], { shell: true })
-    const { stdout } = await execa(`${path} auth login --brief --quiet`, { shell: true })
-    console.log(stdout)
-  } catch (e) {
-    console.log(e)
-  }
-
-  const { stdout: refreshToken } = await execa(path, ['auth', 'print-access-token'], { shell: true })
-
-  try {
-    await execa(path, ['auth', 'activate-refresh-token', refreshToken], { shell: true })
+    execa(`${preferences.pathToGcloud} auth login --update-adc`, { shell: true })
   } catch (e) {
     console.log(e)
   }
